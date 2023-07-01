@@ -3,7 +3,7 @@ from tkinter import messagebox
 import bcrypt
 import random
 import string
-
+from tkinter import *
 
 def check_password_strength(password):
     if len(password) < 8:
@@ -39,12 +39,11 @@ def store_password():
     else:
         messagebox.showwarning("Weak Password", "Please choose a stronger password.")
 
-def generate_strong_password():
-    # Function to generate a strong password
-    password_length = 12
-    characters = string.ascii_letters + string.digits + string.punctuation
-    password = ''.join(random.choice(characters) for _ in range(password_length))
-    return password
+def generate_strong_password(length=10):
+    while True:
+        password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
+        if check_password_strength(password):
+            return password
 
 def suggest_strong_password():
     password = generate_strong_password()
@@ -92,28 +91,33 @@ def check_crack_time():
 
 window = tk.Tk()
 window.title("Password Manager")
-window.geometry('1000x500')
-
-username_label = tk.Label(window, text="Username:")
-username_label.pack()
+window.geometry('800x400')
+photo=PhotoImage(file="edited.png")
+photo_label=Label(image=photo)
+photo_label.place(x=0, y=0, relwidth=1, relheight=1)
+username_label = tk.Label(window, text="Username:",background='black',fg='white')
 username_entry = tk.Entry(window)
-username_entry.pack()
-
-password_label = tk.Label(window, text="Password:")
-password_label.pack()
+password_label = tk.Label(window, text="Password:",background='black',fg='white')
 password_entry = tk.Entry(window, show="*")
-password_entry.pack()
+
+username_label.grid(row=1, column=0, sticky="E",pady=10)
+username_entry.grid(row=1, column=1,pady=10)
+password_label.grid(row=2, column=0, sticky="E",pady=10)
+password_entry.grid(row=2, column=1,pady=10)
 
 store_button = tk.Button(window, text="Store Password", command=store_password)
-store_button.pack()
-
-authenticate_button = tk.Button(window, text="Authenticate", command=authenticate_user)
-authenticate_button.pack()
-
-crack_time_button = tk.Button(window, text="Check Crack Time", command=check_crack_time)
-crack_time_button.pack()
-
 suggest_password_button = tk.Button(window, text="Suggest Strong Password", command=suggest_strong_password)
-suggest_password_button.pack()
+crack_time_button = tk.Button(window, text="Check Crack Time", command=check_crack_time)
+authenticate_button = tk.Button(window, text="Authenticate", command=authenticate_user)
+
+store_button.grid(row=3, column=0,pady=10)
+suggest_password_button.grid(row=3, column=1, pady=10)
+crack_time_button.grid(row=3, column=2,  pady=10)
+authenticate_button.grid(row=4, column=0, columnspan=3,  pady=10)
+
+window.grid_rowconfigure(0, weight=1)
+window.grid_rowconfigure(6, weight=1)
+window.grid_columnconfigure(0, weight=1)
+window.grid_columnconfigure(2, weight=1)
 
 window.mainloop()
